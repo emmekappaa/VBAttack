@@ -10,5 +10,5 @@ def decode_ip_from_pixels(image_path):
     ip_address = ".".join(map(str, ip_bytes))
     return ip_address
 
-decoded_ip = decode_ip_from_pixels("Progetto/Word_with_ip.png")
+decoded_ip = decode_ip_from_pixels("Word_with_ip.png")
 print(f"IP decodificato: {decoded_ip}")
