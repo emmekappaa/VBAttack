@@ -5,11 +5,18 @@ def decode_ip_from_pixels(image_path):
     pixels = img.load()
     
     ip_bytes = []
-    # Estrai i primi 4 pixel per ricostruire l'IP
-    for i in range(4):
-        r, g, b = pixels[i, 0]  # Supponiamo che l'IP sia codificato nei primi 4 pixel, nel canale R
-        ip_bytes.append(str(r))  # Usa solo il canale R
-
+    
+    # Estrai il primo pixel (contenente R, G, B per i primi 3 ottetti)
+    first_pixel = pixels[0, 0]
+    ip_bytes.append(str(first_pixel[0]))  # Ottetto 1 (R)
+    ip_bytes.append(str(first_pixel[1]))  # Ottetto 2 (G)
+    ip_bytes.append(str(first_pixel[2]))  # Ottetto 3 (B)
+    
+    # Estrai l'ultimo pixel (contenente l'ultimo ottetto nel canale R)
+    width, height = img.size
+    last_pixel = pixels[width - 1, height - 1]
+    ip_bytes.append(str(last_pixel[0]))  # Ottetto 4 (R dell'ultimo pixel)
+    
     # Unisci gli ottetti per ottenere l'IP
     return ".".join(ip_bytes)
 
@@ -18,4 +25,5 @@ if __name__ == "__main__":
     import sys
     image_path = sys.argv[1]
     ip = decode_ip_from_pixels(image_path)
-    print(ip)  # Stampa l'IP decodificato
+    print(ip)
+
