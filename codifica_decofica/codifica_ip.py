@@ -16,4 +16,4 @@ def encode_ip_in_pixels(image_path, output_path, ip_address):
     img.save(output_path)
     print("Immagine salvata con IP nei pixel.")
 
-encode_ip_in_pixels("Word.png", "Word_with_ip.png", "192.168.1.100")
+encode_ip_in_pixels("Word.png", "Word_with_ip.png", "10.0.2.15")
