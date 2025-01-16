@@ -1,25 +1,38 @@
 from PIL import Image
 
 def decode_ip_from_pixels(image_path):
-    # Apri l'immagine
     img = Image.open(image_path)
     pixels = img.load()
-
-    # Leggi il primo pixel (dove sono memorizzati i primi 3 ottetti)
-    first_pixel = pixels[0, 0]
-    ip_bytes = [first_pixel[0], first_pixel[1], first_pixel[2]]  # R, G, B
-
-    # Trovo la posizione dell'ultimo pixel (angolo in basso a destra)
-    width, height = img.size
-    last_pixel_x = width - 1
-    last_pixel_y = height - 1
-
-    # Leggi l'ultimo pixel (dove è memorizzato l'ultimo ottetto nel canale R)
-    last_pixel = pixels[last_pixel_x, last_pixel_y]
-    ip_bytes.append(last_pixel[0])  # L'ultimo ottetto è nel canale R
-
-    # Unisci i bytes per ottenere l'indirizzo IP
-    ip_address = ".".join(map(str, ip_bytes))
+    
+    binary_message = ''
+    binary_index = 0
+    
+    # Leggi solo i primi 32 bit (equivalenti a 4 ottetti di un indirizzo IP)
+    for y in range(img.height):
+        for x in range(img.width):
+            r, g, b = pixels[x, y]
+            
+            # Estrai i bit dai canali R, G, B
+            if binary_index < 32:  # Solo i primi 32 bit sono necessari per l'IP
+                binary_message += str(r & 1)  # Estrai l'LSB di R
+                binary_index += 1
+            if binary_index < 32:
+                binary_message += str(g & 1)  # Estrai l'LSB di G
+                binary_index += 1
+            if binary_index < 32:
+                binary_message += str(b & 1)  # Estrai l'LSB di B
+                binary_index += 1
+            
+            # Fermati se hai letto 32 bit
+            if binary_index >= 32:
+                break
+        if binary_index >= 32:
+            break
+    
+    # Ora converti i 32 bit in un indirizzo IP
+    ip_octets = [int(binary_message[i:i+8], 2) for i in range(0, 32, 8)]
+    ip_address = '.'.join(map(str, ip_octets))
+    
     return ip_address
 
 decoded_ip = decode_ip_from_pixels("Word_with_ip.png")
