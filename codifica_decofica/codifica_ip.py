@@ -1,3 +1,4 @@
+
 from PIL import Image
 
 def encode_ip_in_pixels(image_path, output_path, ip_address):
@@ -21,7 +22,7 @@ def encode_ip_in_pixels(image_path, output_path, ip_address):
         for x in range(width):
             r, g, b = pixels[x, y]
             
-            # Sostituisci i bit meno significativi con il messaggio
+            # Sostituisco i bit meno significativi con il messaggio
 
             # (r & 0xFE) AND BIT A BIT CON 11111110
 
