@@ -29,7 +29,10 @@ The effectiveness of the obfuscation was evaluated using VirusTotal:
 
 ## Delivery Method: Spear Phishing Attack
 The macro was delivered via a **spear-phishing campaign**, masquerading as an **iCloud+ invoice receipt**. The email contained a "Click here" link, which directly triggered the download of the malicious document from **Storj**.
-
+### Noteworthy Observations  
+- **Fake Sender Address**: The email appears to be from Apple, but the sender address was manually created using **mail.com**  
+  - **Fake**: `no_replyappleiCloud@mail.com`  
+  - **Legitimate**: `no_reply@email.apple.com` 
 
 ![Phishing Email](https://github.com/user-attachments/assets/72e2cd44-8559-4444-8b01-ac88d719fa10)
 
