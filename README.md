@@ -58,4 +58,6 @@ The macro was delivered via a **spear-phishing campaign**, masquerading as an **
 
 ## Disclaimer
 
-This project is intended for educational and research purposes only. Unauthorized use of this code for malicious activities is strictly prohibited.
+This project is intended for educational and research purposes only. The use of this code for malicious activities, including but not limited to phishing, unauthorized data exfiltration, or any form of cyber attack, is strictly prohibited. The author does not endorse or condone illegal activities. By using this code, you agree to use it solely in a controlled, legal environment, and you take full responsibility for any actions taken with it.
+
+This project demonstrates a spear-phishing scenario using a fake email address designed to mimic a legitimate company (Apple). The email address used in this demonstration, no_replyappleiCloud@mail.com, is entirely fictitious and was created for research purposes only. It is not associated with Apple or any other real-world entity. Any resemblance to actual email addresses is purely coincidental and should not be used for malicious or unauthorized activities. The use of such techniques must always be conducted in a controlled, legal, and ethical manner.
