@@ -1,4 +1,4 @@
-# Malicious VBA Macro
+# VBAttack: A Demonstration of Malicious VBA Macros
 
 ## Overview
 
