@@ -1,6 +1,4 @@
-[![forthebadge](https://forthebadge.com/images/badges/uses-python.svg)](https://forthebadge.com)
-[![forthebadge](https://forthebadge.com/images/badges/it-works-dont-ask-me.svg)](https://forthebadge.com)
-
+[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
 
 # VBAttack: A Demonstration of Malicious VBA Macros
 
